@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -186,11 +186,16 @@ public class DefaultSqlSession implements SqlSession{
                 MapperStatement mapperStatement = configuration.getMapperStatementMap().get(type.getName() + "." + method.getName());
                 String sql = mapperStatement.getSql();
                 Class<?> returnType = method.getReturnType();
+                List list=executor.query(mapperStatement,null);
                 //判断是否为数组
-                if(Collections.class.isAssignableFrom(returnType)){
-                    executor.query(mapperStatement,null);
+                if(Collection.class.isAssignableFrom(returnType)){
+                    return list;
                 }else{
-                    System.out.println("单个");
+                    if(list.size()==1){
+                        return list.get(0);
+                    }else if(list.size()>1){
+                        throw new RuntimeException("Too Many Result!");
+                    }
                 }
                 return null;
             }

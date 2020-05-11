@@ -1,5 +1,6 @@
 package com.practice.mybatis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,9 +11,14 @@ import java.util.List;
  * @Version 1.0
  */
 public class DefaultExecutor implements Executor{
+    DefaultSqlHelper defaultSqlHelper;
+    public DefaultExecutor(SqlHelper sqlHelper){
+        this.defaultSqlHelper=sqlHelper;
+    }
 
     @Override
     public <E> List<E> query(MapperStatement ms, Object parameter) {
-        return null;
+        List<E> es = defaultSqlHelper.<E>executeQueryE(ms.getSql(), null);
+        return es;
     }
 }

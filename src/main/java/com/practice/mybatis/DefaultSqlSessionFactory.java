@@ -20,7 +20,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory{
 
     @Override
     public SqlSession openSession() {
-        Executor executor=new DefaultExecutor();
+        Executor executor=new DefaultExecutor(new SqlHelper(config));
         return new DefaultSqlSession(config,executor);
     }
 

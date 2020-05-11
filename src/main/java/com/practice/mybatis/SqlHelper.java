@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.sql.*;
 
-public class SqlHelper {
+public class SqlHelper implements DefaultSqlHelper{
     //定义变量
     private Connection ct = null;
     //大多数情况下用preparedstatement替代statement
@@ -187,7 +187,6 @@ public class SqlHelper {
         }
     }
 
-
     public Connection getCt() {
         return ct;
     }
@@ -302,6 +301,28 @@ public class SqlHelper {
                 rowData.put(((ResultSetMetaData) md).getColumnName(i), rs.getObject(i));
             }
             list.add(rowData);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Object> executeQueryE(String sql, String[] parameters) {
+        List<Object> list=null;
+        try {
+            ct = getConnection();
+            ps = ct.prepareStatement(sql);
+            if (parameters != null) {
+                for (int i = 0; i < parameters.length; i++) {
+                    ps.setString(i + 1, parameters[i]);
+                }
+            }
+            rs = ps.executeQuery();
+            list=resultSetToList(rs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            close(rs, ps, ct);
         }
         return list;
     }
