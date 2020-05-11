@@ -2,6 +2,7 @@ package com.practice.test.shejimoshi.proxy;
 
 public class SelfWedding implements ProxyInterface {
 
+    @Override
     public void marry() {
         System.out.println("我们结婚了");
     }

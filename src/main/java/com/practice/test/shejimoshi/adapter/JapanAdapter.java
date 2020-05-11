@@ -1,5 +1,6 @@
 package com.practice.test.shejimoshi.adapter;
 
+
 public class JapanAdapter implements ChargeAdapter{
     private final int voltage=110;
 

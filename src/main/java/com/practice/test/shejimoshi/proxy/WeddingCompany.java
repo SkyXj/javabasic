@@ -6,6 +6,7 @@ public class WeddingCompany implements ProxyInterface {
             this.proxyInterface=proxyInterface;
     }
 
+    @Override
     public void marry() {
         System.out.println("婚庆公司开始");
         proxyInterface.marry();
