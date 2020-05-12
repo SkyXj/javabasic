@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.*;
 
 /**
@@ -28,8 +31,10 @@ public class TestMybatis {
         DefaultSqlSessionFactory sqlSessionFactory=new DefaultSqlSessionFactory(configuration);
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        mapper.list();
-//        sqlSession.selectList("pojo.listStudent");
+        List<User> list = mapper.list();
+        for (User user:list) {
+            System.out.println(user.getUsername());
+        }
     }
 
     public static Configuration getConfiguration(){
@@ -87,6 +92,7 @@ public class TestMybatis {
                             Attribute attributetemp = e.attribute(0);
                             MapperStatement mapperStatement=new MapperStatement();
                             mapperStatement.setId(e.attributeValue("id"));
+                            mapperStatement.setResultType(e.attributeValue("resultType"));
                             mapperStatement.setSql(e.getText().trim());
                             mapperStatement.setNamespace(namespace);
                             mapperStatement.setStatementType(e.getName());
@@ -135,4 +141,9 @@ public class TestMybatis {
             listNodes(e);
         }
     }
+
+//    public static void main(String[] args){
+//        List<User> user=new ArrayList<>();
+//        System.out.println(user.getClass());
+//    }
 }

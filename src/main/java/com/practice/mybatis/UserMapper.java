@@ -10,6 +10,7 @@ import java.util.List;
  * @Version 1.0
  */
 public interface UserMapper {
+
     List<User> list();
 
     User getOne();

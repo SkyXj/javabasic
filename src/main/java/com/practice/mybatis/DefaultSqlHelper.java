@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface DefaultSqlHelper {
 
-    public <E> List<E> executeQueryE(String sql, String[] parameters);
+    public <E> List<E> executeQueryE(String sql, String[] parameters,Class<?> clazz);
 }

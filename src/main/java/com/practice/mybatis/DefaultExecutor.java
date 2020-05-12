@@ -18,7 +18,14 @@ public class DefaultExecutor implements Executor{
 
     @Override
     public <E> List<E> query(MapperStatement ms, Object parameter) {
-        List<E> es = defaultSqlHelper.<E>executeQueryE(ms.getSql(), null);
+        String resultType = ms.getResultType();
+        List<E> es =null;
+        try {
+            Class<?> clazz = Class.forName(resultType);
+            es = defaultSqlHelper.executeQueryE(ms.getSql(), null,clazz);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return es;
     }
 }

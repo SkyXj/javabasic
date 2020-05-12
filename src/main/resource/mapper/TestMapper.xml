@@ -6,10 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.practice.mybatis.UserMapper">
 
     <select id="list" resultType="com.practice.mybatis.User">
-        select * from  user
+        select * from sys_user
     </select>
 
     <select id="getOne" resultType="com.practice.mybatis.User">
-        select * from  user limit 0,1
+        select * from sys_user limit 0,1
     </select>
 </mapper>

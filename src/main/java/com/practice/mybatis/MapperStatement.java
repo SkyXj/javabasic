@@ -14,6 +14,10 @@ public class MapperStatement {
     //sql的类型 insert update select delete
     private String StatementType;
 
+    private String resultType;
+
+
+
     public String getSql() {
         return sql;
     }
@@ -44,5 +48,13 @@ public class MapperStatement {
 
     public void setStatementType(String statementType) {
         StatementType = statementType;
+    }
+
+    public String getResultType() {
+        return resultType;
+    }
+
+    public void setResultType(String resultType) {
+        this.resultType = resultType;
     }
 }

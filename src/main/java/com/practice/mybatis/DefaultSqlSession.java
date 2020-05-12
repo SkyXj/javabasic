@@ -184,7 +184,6 @@ public class DefaultSqlSession implements SqlSession{
             public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
                 System.out.println(type.getName() + "." + method.getName());
                 MapperStatement mapperStatement = configuration.getMapperStatementMap().get(type.getName() + "." + method.getName());
-                String sql = mapperStatement.getSql();
                 Class<?> returnType = method.getReturnType();
                 List list=executor.query(mapperStatement,null);
                 //判断是否为数组

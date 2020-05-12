@@ -10,6 +10,7 @@ package com.practice.mybatis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -306,7 +307,7 @@ public class SqlHelper implements DefaultSqlHelper{
     }
 
     @Override
-    public List<Object> executeQueryE(String sql, String[] parameters) {
+    public <E> List<E> executeQueryE(String sql, String[] parameters,Class<?> clazz) {
         List<Object> list=null;
         try {
             ct = getConnection();
@@ -317,12 +318,45 @@ public class SqlHelper implements DefaultSqlHelper{
                 }
             }
             rs = ps.executeQuery();
-            list=resultSetToList(rs);
+            list=handler(rs,clazz);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         } finally {
             close(rs, ps, ct);
+        }
+        return (List<E>)list;
+    }
+
+
+    public List<Object> handler(ResultSet rs, Class<?> clazz) {
+        List<Object> list = new ArrayList<>();
+        Object obj = null;
+        try {
+            while (rs.next()) {
+                // 创建一个clazz对象实例并将其赋给要返回的那个返回值。
+                obj = clazz.newInstance();
+                // 获取结果集的数据源
+                ResultSetMetaData rsmeta = rs.getMetaData();
+
+                // 获取结果集中的字段数
+                int count = rsmeta.getColumnCount();
+
+                // 循环取出个字段的名字以及他们的值并将其作为值赋给对应的实体对象的属性
+                for (int i = 0; i < count; i++) {
+                    // 获取字段名
+                    String name = rsmeta.getColumnName(i + 1);
+                    // 利用反射将结果集中的字段名与实体对象中的属性名相对应，由于
+                    // 对象的属性都是私有的所以要想访问必须加上getDeclaredField(name)和
+                    Field f = obj.getClass().getDeclaredField(name);
+                    f.setAccessible(true);
+                    // 将结果集中的值赋给相应的对象实体的属性
+                    f.set(obj, rs.getObject(name));
+                }
+                list.add(obj);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
